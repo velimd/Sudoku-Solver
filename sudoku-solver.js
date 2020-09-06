@@ -9,20 +9,22 @@ which consists of id, sudoku puzzel
 809200003400806100001030007640002315000000004507060900020407806104000050030908200
 
 =
+
 012 345 678
-
-809 200 003   0
-400 806 100   1
-001 030 007   2
-
-640 002 315   3
-000 000 004   4
-507 060 900   5
-
-020 407 806   6
-104 000 050   7
-030 908 200   8
-
+ ___________
+|809 200 003| 0
+|400 806 100| 1
+|001 030 007| 2
+|           | 
+|640 002 315| 3
+|000 000 004| 4
+|507 060 900| 5
+|           |
+|020 407 806| 6
+|104 000 050| 7
+|030 908 200| 8
+ ‾‾‾‾‾‾‾‾‾‾‾
+Key:
 0 = blank spaces
 
 
@@ -54,22 +56,6 @@ function solveSudoku(puzzle) {
 	console.log(solvedboard);
 	return solvedboard;
 }
-
-// function fillInSudokuBoard(puzzle) {
-// 	const blocks = [];
-// 	for (let i = 0; i < 9; i=i+3) {
-// 		for(let j = 0; j < 3; j++){
-// 			for(let k = 0; k < 3; k++){
-// 				if (!blocks[k+i]) {
-// 					blocks[k+i] = [];
-// 				}
-// 				blocks[k+i] = blocks[k+i].concat(puzzle.substring(0,3).split(''));
-// 				puzzle = puzzle.substring((3), puzzle.length);
-// 			}
-// 		}
-// 	}
-// 	return blocks;
-// }
 
 function fillInSudokuBoard(puzzle) {
 	const board = [];
