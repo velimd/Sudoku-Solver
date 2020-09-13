@@ -10,7 +10,7 @@ which consists of id, sudoku puzzel
 
 =
 
-012 345 678
+ 012 345 678
  ___________
 |809 200 003| 0
 |400 806 100| 1
@@ -27,86 +27,94 @@ which consists of id, sudoku puzzel
 Key:
 0 = blank spaces
 
+solved
+
+879241563453876192261539487648792315392185674517364928925417836184623759736958241
+
+=
+
+ 012 345 678
+ ___________
+|879 241 563| 0
+|453 876 192| 1
+|261 539 487| 2
+|           | 
+|648 792 315| 3
+|392 185 674| 4
+|517 364 928| 5
+|           |
+|925 417 836| 6
+|184 623 759| 7
+|736 958 241| 8
+ ‾‾‾‾‾‾‾‾‾‾‾
+
 
 Idea: split the string into an array of 9, maybe an object with position, values and values not used.
 First scan the 3x3 boxes and see what values are not used, then scan the rows and columns.
-*/
 
-// const readline = require('readline');
-
-// const rl = readline.createInterface({ input: process.stdin });
-
-// rl.on('line', line => {
-//   const [id, puzzle] = line.split(',');
-//   const solvedPuzzle = solveSudoku(puzzle);
-//   console.log(`${id},${puzzle}`);
-// });
-
-/*
 1. fill in the array/objects
 2. find out missing from each box
 3. check row and column and fill in the position
 */
 
-const rowsSection = [[0,1,2], [3,4,5], [6,7,8]];
+// const readline = require('readline');
+const {
+ initBoard,
+ fillInSudokuBoard,
+ getBlock,
+ getValuePosition,
+ getRow,
+ getColumn,
+ removeDuplicatesAndZero,
+ save,
+ getBoard,
+ flattenArray
+} = require('./util');
+
+// const rl = readline.createInterface({ input: process.stdin });
+
+const sudokuNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+// rl.on('line', line => {
+//   const [id, puzzle] = line.split(',');
+//   initBoard(puzzle);
+//   const solvedPuzzle = solveSudokuBoard();
+//   console.log(`${id},${solvedPuzzle}`);
+// });
+
 
 function solveSudoku(puzzle) {
-	const board = fillInSudokuBoard(puzzle);
-	const solvedboard = solveSudokuBoard(board);
+	initBoard(puzzle);
+	const solvedboard = solveSudokuBoard();
 	console.log(solvedboard);
-	return solvedboard;
 }
 
-function fillInSudokuBoard(puzzle) {
-	const board = [];
-	for (let row = 0; row < 9; row++) {
-		board[row] = [];
-		for (let sectionCol = 0; sectionCol < 3; sectionCol++) {
-			board[row].push(puzzle.substring(0,3).split(''));
-			puzzle = puzzle.substring(3, puzzle.length);
+function solveSudokuBoard() {
+	let solved = false;
+	while(!solved) {
+		for (let i = 0; i < 9; i++) {
+			const block = getBlock(i);
+			// console.log(block);
+			block.forEach((value, index) => {
+				if (+value === 0) {
+					const [row, col] = getValuePosition(block, i, index);
+					const rowValues = getRow(row);
+					const colValues = getColumn(col);
+					const usedNumbers = removeDuplicatesAndZero(block.concat(rowValues.concat(colValues)));
+					const possibleValues = sudokuNumbers.filter(value => usedNumbers.indexOf(value.toString()) === -1);
+					if (possibleValues.length === 1) {
+						save(possibleValues[0], row, col, index);
+					}
+				}
+			});
+		}
+		if (!getBoard().includes(0)) {
+			solved = true;
 		}
 	}
-	return board;
+	// return getBlock(board, 4, 5);
+	return getBoard();
 }
 
-function solveSudokuBoard(board) {
-	return getBlock(board, 4, 5);
-	// return board;
-}
-
-function getRow(board, row) {
-	return flattenArray(board[row]);
-}
-
-function getRowsRangeSection(row) {
-	for (let i = 0; i < 3; i++) {
-		if (rowsSection[i].includes(row)) {
-			return [rowsSection[i][0], rowsSection[i][2]];
-		}
-	}
-	return null;
-}
-
-function getColumn(board, col) {
-	const column = [];
-	for (let row = 0; row < 9; row++) {
-		column.push(flattenArray(board[row])[col]);
-	}
-	return column;
-}
-
-function getBlock(board, row, col) {
-	const block = [];
-	const colSection = Math.floor(col / 3);
-	let [first, last] = getRowsRangeSection(row);
-	for (; first <= last; first++) {
-		block.push(board[first][colSection]);
-	}
-	return flattenArray(block);
-}
-
-function flattenArray(array) {
-	return [].concat.apply([], array);
-}
 
 solveSudoku('809200003400806100001030007640002315000000004507060900020407806104000050030908200');
