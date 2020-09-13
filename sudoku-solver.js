@@ -94,7 +94,6 @@ function solveSudokuBoard() {
 	while(!solved) {
 		for (let i = 0; i < 9; i++) {
 			const block = getBlock(i);
-			// console.log(block);
 			block.forEach((value, index) => {
 				if (+value === 0) {
 					const [row, col] = getValuePosition(block, i, index);
@@ -112,7 +111,6 @@ function solveSudokuBoard() {
 			solved = true;
 		}
 	}
-	// return getBlock(board, 4, 5);
 	return getBoard();
 }
 
