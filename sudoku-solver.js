@@ -57,7 +57,7 @@ First scan the 3x3 boxes and see what values are not used, then scan the rows an
 3. check row and column and fill in the position
 */
 
-// const readline = require('readline');
+const readline = require('readline');
 const {
  initBoard,
  fillInSudokuBoard,
@@ -71,16 +71,16 @@ const {
  flattenArray
 } = require('./util');
 
-// const rl = readline.createInterface({ input: process.stdin });
+const rl = readline.createInterface({ input: process.stdin });
 
 const sudokuNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-// rl.on('line', line => {
-//   const [id, puzzle] = line.split(',');
-//   initBoard(puzzle);
-//   const solvedPuzzle = solveSudokuBoard();
-//   console.log(`${id},${solvedPuzzle}`);
-// });
+rl.on('line', line => {
+  const [id, puzzle] = line.split(',');
+  initBoard(puzzle);
+  const solvedPuzzle = solveSudokuBoard();
+  console.log(`${id},${solvedPuzzle}`);
+});
 
 
 function solveSudoku(puzzle) {
@@ -91,7 +91,7 @@ function solveSudoku(puzzle) {
 
 function solveSudokuBoard() {
 	let solved = false;
-	while(!solved) {
+	for (let tries = 0; tries < 100; tries++) {
 		for (let i = 0; i < 9; i++) {
 			const block = getBlock(i);
 			block.forEach((value, index) => {
@@ -115,4 +115,4 @@ function solveSudokuBoard() {
 }
 
 
-solveSudoku('809200003400806100001030007640002315000000004507060900020407806104000050030908200');
+// solveSudoku('809200003400806100001030007640002315000000004507060900020407806104000050030908200');
